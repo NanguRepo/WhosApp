@@ -7,7 +7,7 @@
 	$: connectionName = '';
 	let checkIndex: number = 0;
 	const matchmake = async () => {
-		const response = await axios.post('http://127.0.0.1:5000/v2/whosapp/matchmaking', {
+		const response = await axios.post('https://api.nangu.dev/v2/whosapp/matchmaking', {
 			user: username
 		});
 		connectionStatus = response.data.status;
@@ -20,10 +20,9 @@
 		}
 	};
 	const checkConnection = async () => {
-		const response = await axios.post('http://127.0.0.1:5000/v2/whosapp/checkConnection', {
+		const response = await axios.post('https://api.nangu.dev/v2/whosapp/checkConnection', {
 			user: username
 		});
-		console.log(response);
 		if (response.data.status == 'connected') {
 			connectionStatus = 'connected';
 			connectionName = response.data.id;
@@ -36,15 +35,14 @@
 				}, 3000);
 			} else {
 				connectionStatus = 'waitingTimedOut';
-				const response = await axios.post('http://127.0.0.1:5000/v2/whosapp/removeAvailability', {
+				const response = await axios.post('https://api.nangu.dev/v2/whosapp/removeAvailability', {
 					user: username
 				});
-				console.log(response);
 			}
 		}
 	};
 	const sendMessage = async () => {
-		await axios.post('http://127.0.0.1:5000/v2/whosapp/send', {
+		await axios.post('https://api.nangu.dev/v2/whosapp/send', {
 			id: connectionName,
 			user: username,
 			message: inputText
@@ -54,17 +52,16 @@
 	$: chatLog = [];
 	$: prevChatLog = [];
 	const getMessages = async () => {
-		const response = await axios.post('http://127.0.0.1:5000/v2/whosapp/messages', {
+		const response = await axios.post('https://api.nangu.dev/v2/whosapp/messages', {
 			id: connectionName
 		});
-		console.log(response.data);
 		if (response.data != prevChatLog) {
 			prevChatLog = chatLog;
 			chatLog = response.data;
 		}
 		setTimeout(async () => {
 			getMessages();
-		}, 100);
+		}, 1000);
 	};
 </script>
 
@@ -73,7 +70,7 @@
 		<div class="flex flex-col h-full rounded gap-2 overflow-scroll">
 			{#if connectionStatus == 'connected'}
 				{#each chatLog as message}
-					<div class="w-full flex flex-row {message.sender != username ? 'justify-end' : ''}">
+					<div class="w-full flex flex-row {message.sender == username ? 'justify-end' : ''}">
 						<div class="bg-neutral-700 px-2 py-2 rounded w-fit max-w-[55ch]">
 							<p class="font-bold">{message.sender}</p>
 							<p class="break-words">{message.message}</p>
