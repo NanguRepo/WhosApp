@@ -1,0 +1,15 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+	button {
+		@apply rounded h-auto w-auto bg-neutral-200 enabled:hover:bg-neutral-300 enabled:active:bg-neutral-400 disabled:text-neutral-400 dark:bg-neutral-700 p-2 dark:enabled:hover:bg-neutral-600 dark:enabled:active:bg-neutral-500 dark:disabled:text-neutral-500;
+	}
+	input {
+		@apply h-full pl-2 rounded bg-neutral-200 dark:bg-neutral-700;
+	}
+	.error-text {
+		@apply text-red-600 dark:text-red-400;
+	}
+}
